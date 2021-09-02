@@ -159,7 +159,7 @@ def main():
     update_worksheet(stock_data, 'stock')
 
 
-print('Welcome to Love Sandwiches Data Automation')
+print('Welcome to Love Sandwiches Data Automation\n')
 #main()
 
 
@@ -170,26 +170,22 @@ def get_stock_values():
 
     sales = SHEET.worksheet('sales')
     headings = []
-    for ind in range(1, 7):
-        column = sales.col_values(ind)
+    for item in range(1, 7):
+        column = sales.col_values(item)
         headings.append(column[0])
 
     stock = SHEET.worksheet('stock')
     stock_numbers = []
-    for int in range(1, 7):
-        column = stock.col_values(int)
+    for count in range(1, 7):
+        column = stock.col_values(count)
         stock_numbers.append(column[-1])
 
-    print(headings)
-    print(stock_numbers)
-    return headings, stock_numbers
+    stock_values = {headings[i]: stock_numbers[i] for i in range(len(headings))}
+    print('Make the following numbers of sandwiches for next market:\n')
+    print(str(stock_values))
+    return stock_values
 
-    stock_values = {}
-    for key in headings:
-        for values in stock_numbers:
-            stock_values[key] = values
-            stock_numbers.remove(value)
-            break
-        print(str(stock_values))
 
 get_stock_values()
+
+  
