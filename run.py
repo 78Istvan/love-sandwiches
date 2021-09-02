@@ -13,6 +13,7 @@ SCOPED_CREDS = CREDS.with_scopes(SCOPE)
 GSPREAD_CLIENT = gspread.authorize(SCOPED_CREDS)
 SHEET = GSPREAD_CLIENT.open('love_sandwichesm')
 
+
 def get_sales_data():
     """
     Get sales figures input from the user.
@@ -28,15 +29,14 @@ def get_sales_data():
         data_str = input('Enter youtr data here:')
 
         sales_data = data_str.split(',')
-        
+
         if validate_data(sales_data):
             print('Data is valid!')
             break
 
     return sales_data
 
-   
-   
+      
 def validate_data(values):
     """
     Inside the try, converts all values into integers.
@@ -57,6 +57,7 @@ def validate_data(values):
 
     return True
 
+
 def update_sales_worksheet(data):
     """
     Update slaes worksheet, add new row with the list provided.
@@ -65,6 +66,7 @@ def update_sales_worksheet(data):
     sales_worksheet = SHEET.worksheet('sales')
     sales_worksheet.append_row(data)
     pprint('Sales worksheet updated succesfully.\n')
+
 
 def update_surplus_worksheet(data):
     """
@@ -98,7 +100,7 @@ def calculate_surplus_data(sales_row):
     print('Calculating surplus data...\n')
     stock = SHEET.worksheet('stock').get_all_values()
     stock_row = stock[-1]
-    
+
     surplus_data = []
     for stock, sales in zip(stock_row, sales_row):
         surplus = int(stock) - sales
@@ -115,13 +117,14 @@ def get_last_5_entries_sales():
     """
 
     sales = SHEET.worksheet('sales')
-    
+
     columns = []
     for int in range(1, 7):
         column = sales.col_values(int)
         columns.append(column[-5:])
 
     return columns
+
 
 def calculate_stock_data(data):
     """
@@ -136,10 +139,10 @@ def calculate_stock_data(data):
         average = sum(int_column) / len(int_column)
         stock_num = average * 1.1
         new_stock_data.append(round(stock_num))
+    
+    print(new_stock_data)
 
     return new_stock_data
-
-
 
 
 def main():
@@ -156,6 +159,37 @@ def main():
     update_worksheet(stock_data, 'stock')
 
 
-print('Welcome to Love Sandwiches Data Automation')    
-main()
+print('Welcome to Love Sandwiches Data Automation')
+#main()
 
+
+def get_stock_values():
+    """
+    Takeing headings from worksheet
+    """
+
+    sales = SHEET.worksheet('sales')
+    headings = []
+    for ind in range(1, 7):
+        column = sales.col_values(ind)
+        headings.append(column[0])
+
+    stock = SHEET.worksheet('stock')
+    stock_numbers = []
+    for int in range(1, 7):
+        column = stock.col_values(int)
+        stock_numbers.append(column[-1])
+
+    print(headings)
+    print(stock_numbers)
+    return headings, stock_numbers
+
+    stock_values = {}
+    for key in headings:
+        for values in stock_numbers:
+            stock_values[key] = values
+            stock_numbers.remove(value)
+            break
+        print(str(stock_values))
+
+get_stock_values()
